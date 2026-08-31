@@ -1,22 +1,12 @@
-import sys
-sys.setrecursionlimit(100000)
+cache = {0: 0, 1: 1}
 
 def fibonacci(n):
 
-    global call_count
-    call_count += 1
+    for i in range (2, n + 1):
 
-    if n <= 0:
+        if i not in cache:
 
-        return 0
-    
-    if n == 1:
-
-        return 1
-    
-    if n not in cache:
-
-        cache[n] = fibonacci(n - 1) + fibonacci(n - 2)
+            cache[i] = cache[i - 1] + cache[i - 2]
 
     return cache[n]
 
@@ -25,30 +15,26 @@ def is_positive_integer(text):
     try:
 
         return int(text) > 0
-    
+
     except:
 
         pass
 
     return False
-
+    
 if __name__ == "__main__":
 
     import time
 
     while True:
 
-        cache = {}
         text = input("Please enter a positive integer: ")
 
         if not is_positive_integer(text):
-
             continue
 
-        call_count = 0
         start = time.perf_counter()
         result = fibonacci(int(text))
         end = time.perf_counter()
 
         print(f"fibonacci({int(text)}) = {result}, calculating this took {end - start:.4e} seconds.")
-        print(f"It took {call_count} calls.")
