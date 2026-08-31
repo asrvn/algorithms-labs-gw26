@@ -30,7 +30,7 @@ def fibonacci(n):
     cache[n] = fibonacci(n - 1) + fibonacci(n - 2)
     return cache[n]
 
-    return cache[n - 1] + cache[n - 2]
+    # return cache[n - 1] + cache[n - 2]
 
 def main():
 
