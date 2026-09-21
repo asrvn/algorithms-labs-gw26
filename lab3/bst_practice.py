@@ -64,17 +64,100 @@ def bst_insert(tree, key):
   Postconditions: tree satisfies BST search invariant; new node has correct parent.
   """
   # TODO 2.3A: Traverse downward to find parent slot, attach Node(key, parent=...), and update tree.root if empty.
-  raise NotImplementedError("Complete bst_insert")
 
+  to_insert = Node(key)
+
+  if (tree.root is None):
+
+    tree.root = to_insert
+
+  else:
+
+    current = tree.root
+    parent = None
+
+    while current is not None:
+
+      parent = current
+
+      if key < current.key:
+
+        current = current.left
+
+      else:
+
+        current = current.right
+
+    to_insert.parent = parent
+
+    if key < parent.key:
+
+      parent.left = to_insert
+
+    else:
+
+      parent.right = to_insert
+
+  return to_insert
 
 def bst_delete(tree, key):
+
   """Delete key from tree, splicing/replacing nodes; return deleted Node (or None).
 
   Handles 0-child, 1-child, and 2-child cases using the in-order successor.
   Preserves BST search invariant and all parent pointers.
   """
-  # TODO 2.3B: Find target node z; handle 0-child, 1-child, and 2-child cases using transplant and successor.
-  raise NotImplementedError("Complete bst_delete")
+
+  to_insert = Node(key)
+
+  if (tree.root is None):
+
+    return None
+
+  current = tree.root
+
+  while current is not None:
+
+    if key < current.key:
+
+      current = current.left
+
+    elif key > current.key:
+
+      current = current.right
+
+    else:
+
+      break
+        
+  if current is None or key != current.key:
+
+    return None
+
+  if current.left is None:
+
+    transplant(tree, current, current.right)
+
+  elif current.right is None:
+
+    transplant(tree, current, current.left)
+  
+  else:
+
+    minimum = tree_minimum(current.right)
+
+    if minimum.parent != current:
+
+      transplant(tree, minimum, minimum.right)
+      minimum.right = current.right
+      minimum.right.parent = minimum
+
+    transplant(tree, current, minimum)
+    minimum.left = current.left
+    minimum.left.parent = minimum
+
+  return current
+
 
 
 if __name__ == "__main__":

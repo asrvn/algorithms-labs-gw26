@@ -78,15 +78,15 @@ not just their indices. The array state is the state after that comparison.
 
 | Pass | `j` | Values compared | Swap or keep? | Array afterward |
 |---|---|---|---|---|
-| 2 | 0 | TODO | TODO | TODO |
-| 2 | 1 | TODO | TODO | TODO |
-| 2 | 2 | TODO | TODO | TODO |
-| 2 | 3 | TODO | TODO | TODO |
-| 3 | 0 | TODO | TODO | TODO |
-| 3 | 1 | TODO | TODO | TODO |
-| 3 | 2 | TODO | TODO | TODO |
-| 4 | 0 | TODO | TODO | TODO |
-| 4 | 1 | TODO | TODO | TODO |
+| 2 | 0 | 2 > 5 | Keep | [2, 5, 1, 5, 6, 9] |
+| 2 | 1 | 5 > 1 | Swap | [2, 1, 5, 5, 6, 9] |
+| 2 | 2 | 5 > 5 | Keep | [2, 1, 5, 5, 6, 9] |
+| 2 | 3 | 5 > 6 | Keep | [2, 1, 5, 5, 6, 9] |
+| 3 | 0 | 2 > 1 | Swap | [1, 2, 5, 5, 6, 9] |
+| 3 | 1 | 2 > 5 | Keep | [1, 2, 5, 5, 6, 9] |
+| 3 | 2 | 5 > 5 | Keep | [1, 2, 5, 5, 6, 9] |
+| 4 | 0 | 1 > 2 | Keep | [1, 2, 5, 5, 6, 9] |
+| 4 | 1 | 2 > 5 | Keep | [1, 2, 5, 5, 6, 9] |
 
 Record the sorted suffix guaranteed after each pass, the total comparisons,
 and the total swaps. Why does the algorithm stop after Pass 4 even though the

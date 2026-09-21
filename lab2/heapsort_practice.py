@@ -1,7 +1,7 @@
 """Part 4: implement sift-down and complete the Heapsort loop."""
 
-
 def min_heapify_down(arr, i, heap_size):
+
   """Repair the heap at i in place and return None.
 
   Preconditions: 0 <= heap_size <= len(arr). For a nonempty heap,
@@ -10,11 +10,14 @@ def min_heapify_down(arr, i, heap_size):
   Indices heap_size onward are outside the heap and must not change.
   """
   # TODO 4.2B: Follow the sift-down pseudocode. Check bounds before indexing.
+
   raise NotImplementedError("Complete min_heapify_down")
 
 
 def build_min_heap(arr):
+
   """Provided: build a min-heap from the bottom up, in place."""
+  
   for i in range(len(arr) // 2 - 1, -1, -1):
     min_heapify_down(arr, i, len(arr))
 
