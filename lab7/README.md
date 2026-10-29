@@ -82,11 +82,11 @@ List the text indices checked, in order, including the one where a mismatch
 occurs. Record where $j$ stops and whether you add $s$ to the results.
 
 | Shift `s` | Text indices checked | Final `j` | Append `s`? |
-|---|---|---|---|
-| 1 | `1` | 0 | No |
-| 2 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+|-----------|----------------------|-----------|-------------|
+| 1         | `1`                  | 0         | No          |
+| 2         | `2, 3`               | 1         | No          |
+| 4         | `4, 5`               | 1         | No          |
+| 5         | `5, 6, 7`            | 3         | Yes         |
 
 ### 1.2 Implementation
 
@@ -174,9 +174,24 @@ At shift `6`, the hash is `7`; all five characters match, so record `6`.
 1. **Move from shift `6` to `7`.** Which digit leaves the window, and which
    digit enters? Substitute them into the rolling-hash formula and calculate
    the new hash.
+
+   `3` leaves the window, `2` enters the window
+   
+   ```
+   new hash = (10(7 - 3 * 3) + 2) mod 13 = (-18) mod 13 = 8
+   ```
+   
 2. **Check shift `12`.** Its hash is `7`, so compare the characters. List the
    text and pattern indices checked before stopping. Is this a match or a
    spurious hit?
+
+   Text index: `12`, Pattern index: `0`
+
+   `T[12] = '6'`
+
+   `P[0] = '3'`
+
+   Characters are not the same. This is a spurious hit.
 
 ### 2.2 Implementation
 
@@ -201,13 +216,19 @@ operation takes constant time.
 Give tight bounds in terms of $n$ and $m$. The search column includes both
 hash comparisons and character checks.
 
-| Case | Build hashes | Search | Total |
-|---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Case   | Build hashes | Search                | Total                  |
+|--------|--------------|-----------------------|------------------------|
+| Worst  | `Theta(m)`   | `Theta(m(n - m + 1))` | `Theta(m(n - m + 1))`  |
+| Best   | `Theta(m)`   | `Theta(n - m + 1)`    | `Theta(n)`             |
 
 For each case, explain in one sentence how many windows need character checks
 and how many characters are checked in each one.
+
+Worst:
+Every hash matches and all characters (m in total) need to be confirmed. Because there are `n - m + 1` windows, the search takes `Theta(m(n - m + 1))`.
+
+Best:
+Every window has a hash that does not match the pattern. Thus, `Theta(m)` is necessary to make the hashes and checks all of the `n - m + 1` windows in constant time, resulting in `Theta(n)`.
 
 ### Connection: Searching for several patterns
 
@@ -299,13 +320,27 @@ its starting value and each value it reaches. Write “none” if no fallback oc
 The first row is worked: `P[2] == P[4]`, so `k` increases to `3`.
 
 | Index `j` | Starting `k` | Fallbacks | `pi[j]` |
-|---|---|---|---|
-| 4 | 2 | none | 3 |
-| 5 | 3 | TODO | TODO |
-| 6 | 0 | TODO | TODO |
+|-----------|--------------|-----------|---------|
+| 4         | 2            | none      | 3       |
+| 5         | 3            | 3 - 1 - 0 | 0       |
+| 6         | 0            | none      | 1       |
 
 Now trace the matcher at `i = 8`, starting with `q = 6`. Which pattern index
 is compared with `T[8]`? What shift is recorded, and what is `q` afterward?
+
+`i = 8`:
+
+   `q = 6`
+
+   `P[6] = T[8] = 'a'`
+
+   `q = 7`
+
+   `i - m + 1 = 8 - 7 + 1 = 2`
+
+   `q = pi[6] = 1`
+
+   Recorded shift: `2`, new q: `1`
 
 ### 3.2 Implementation
 
@@ -328,14 +363,18 @@ to build `pi`. Assume $1 \le m \le n$ and that the search returns all matches.
 
 Give tight bounds in terms of $n$ and $m$.
 
-| Case | Build `pi` | Search | Total |
-|---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Case   | Build `pi` | Search   | Total        |
+|--------|------------|----------|--------------|
+| Best   | Theta(m)   | Theta(n) | Theta(n + m) |
+| Worst  | Theta(m)   | Theta(n) | Theta(n + m) |
 
 Explain the worst-case bound in a few lines. Across the whole scan, how often
 can `q` increase? How does that limit the number of fallbacks? Use the same
 reasoning for `k` when building `pi`.
+
+`q` can only increase a maximum of once per character. Thus, there are a maximum of `n` increases. Every fallback decreases `q`, so the number of fallbacks is bounded by `n`.
+
+To create the prefix table, `k` increases a maximum of `m - 1` times. The fallbacks are bounded by the increases of `k`. Thus, creating the prefix table is `Theta(m)`, and searching takes `Theta(n)`. As a result, running time is `Theta(n + m)`.
 
 ---
 
