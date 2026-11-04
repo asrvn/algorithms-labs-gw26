@@ -1,4 +1,6 @@
-"""Complete BFS, path reconstruction, and recursive DFS for Lab 8."""
+"""
+Complete BFS, path reconstruction, and recursive DFS for Lab 8.
+"""
 
 from collections import deque
 
@@ -13,9 +15,10 @@ EXAMPLE_GRAPH = [
     [],
 ]
 
-
 def bfs(graph, source):
-    """Return (dist, parent) lists for BFS from a valid source vertex.
+
+    """
+    Return (dist, parent) lists for BFS from a valid source vertex.
 
     Use the listed neighbor order. Unreachable distances stay infinite.
     """
@@ -27,32 +30,53 @@ def bfs(graph, source):
     dist[source] = 0
     queue = deque([source])
 
-    # TODO 2.2: process the queue and discover each unvisited neighbor
-    raise NotImplementedError("Complete bfs")
+    while queue:
+
+        u = queue.popleft()  # front pop
+        for v in graph[u]:
+
+            if not visited[v]:
+
+                visited[v] = True
+                dist[v] = dist[u] + 1
+                parent[v] = u
+                queue.append(v)
 
     return dist, parent
 
-
 def reconstruct_path(parent, source, target):
-    """Return a source-to-target path, or [] when the target is unreachable.
+
+    """
+    Return a source-to-target path, or [] when the target is unreachable.
 
     parent comes from BFS rooted at source; source and target are valid indices.
     """
+
     path = []
     current = target
 
-    # TODO 2.3: follow parents, reverse the path, and check that it starts at source
-    raise NotImplementedError("Complete reconstruct_path")
+    while current is not None:
 
-    return path
+        path.append(current)
+        current = parent[current]
 
+    path.reverse()
+
+    if (path[0] == source):
+
+        return path
+
+    return []
 
 def dfs(graph):
-    """Return (parent, discovered, finished) for a full recursive DFS forest.
+
+    """
+    Return (parent, discovered, finished) for a full recursive DFS forest.
 
     Visit roots in increasing order and neighbors in their listed order.
     The shared clock starts at zero and increases on discovery and finishing.
     """
+
     n = len(graph)
     color = [WHITE] * n
     parent = [None] * n
@@ -61,17 +85,33 @@ def dfs(graph):
     time = 0
 
     def visit(u):
-        nonlocal time
-        # TODO 3.2: record discovery, explore white neighbors, and record finishing
-        raise NotImplementedError("Complete DFS visit")
 
-    # TODO 3.2: start a visit at each vertex that is still white
-    raise NotImplementedError("Complete DFS outer loop")
+        nonlocal time
+        time += 1
+        discovered[u] = time
+        color[u] = GRAY
+
+        for v in graph[u]:
+
+            if color[v] == WHITE:
+
+                parent[v] = u
+                visit(v)
+
+        color[u] = BLACK
+        time += 1
+        finished[u] = time
+
+    for u in range(n):
+
+        if color[u] == WHITE:
+
+            visit(u)
 
     return parent, discovered, finished
 
-
 if __name__ == "__main__":
+
     from lab_checks import check_graph_traversals
 
     raise SystemExit(check_graph_traversals(bfs, reconstruct_path, dfs))

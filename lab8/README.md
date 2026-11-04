@@ -120,14 +120,16 @@ import: `append(v)` adds to the back and `popleft()` removes from the front.
 has had all its neighbors checked, with the front on the left. List only
 newly assigned parents.
 
-| Vertex removed | Queue afterward | New parent assignments |
-|---|---|---|
-| 0 | `[1, 2]` | `parent[1] = 0`, `parent[2] = 0` |
-| 1 | TODO | TODO |
-| 2 | TODO | TODO |
-| 3 | TODO | TODO |
+|  Vertex removed | Queue afterward | New parent assignments           |
+|-----------------|-----------------|----------------------------------|
+| 0               | `[1, 2]`        | `parent[1] = 0`, `parent[2] = 0` |
+| 1               | `[2, 3, 4]`     | `parent[3] = 1`, `parent[4] = 1` |
+| 2               | `[3, 4]`        | None                             |
+| 3               | `[4]`           | None                             |
 
 Why does processing `2` leave `parent[4]` unchanged? Answer in one sentence.
+
+    Because vertex 4 was already found when 1 was removed, so the parent is not reassigned by BFS.    
 
 ### 2.2 Implementation
 
@@ -222,12 +224,12 @@ DFS(graph)
 Complete the selected vertices below. Keep the same clock when moving to
 vertex `5`.
 
-| Vertex | Parent | Discovery time | Finishing time |
-|---|---|---|---|
-| 0 | `None` | 1 | 10 |
-| 3 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+| Vertex   | Parent | Discovery time | Finishing time |
+|----------|--------|----------------|----------------|
+| 0        | `None` | 1              | 10             |
+| 3        | `1`    | 3              | 8              |
+| 4        | `3`    | 4              | 7              |
+| 5        | `None` | 11             | 12             |
 
 ### 3.2 Implementation
 
@@ -246,14 +248,21 @@ Complete the table with tight bounds. Assume an undirected, connected graph
 so BFS from one source reaches every vertex. For the matrix version, finding
 a vertex's neighbors requires scanning its entire row.
 
-| Cost | Adjacency list | Adjacency matrix |
-|---|---|---|
-| Store the graph | TODO | TODO |
-| Run BFS | TODO | TODO |
-| Run DFS | TODO | TODO |
+| Cost             | Adjacency list | Adjacency matrix |
+|------------------|----------------|------------------|
+| Store the graph  | Theta(V + E)   | Theta(V^2)       |
+| Run BFS          | Theta(V + E)   | Theta(V^2)       |
+| Run DFS          | Theta(V + E)   | Theta(V^2)       |
 
 In a few sentences, explain how many neighbor entries each traversal checks
 with each representation. Why does a sparse graph benefit from adjacency lists?
+
+    Adjacency lists require BFS and DFS to look at every vertex once and edge twice
+    (from each end of the edge). Thus, the total work is 2E. Adjacency matrices
+    look at V neighbors for each of the V vertices. This results in V^2 total
+    work. Adjacency lists are more appropriate for sparse graphs because E is
+    smaller than V^2. This saves space and time processing edges compared to
+    adjacency matrices.
 
 ---
 
