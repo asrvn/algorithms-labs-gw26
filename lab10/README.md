@@ -115,18 +115,25 @@ a disconnected graph.
 **after** checking the removed vertex's neighbors. An edge is written
 using its two endpoint labels.
 
-| Vertex removed | Edge added | `key[D]` | `key[E]` |
-|---|---|---|---|
-| `B` | TODO | TODO | TODO |
-| `C` | TODO | TODO | TODO |
-| `D` | TODO | TODO | TODO |
+| Vertex removed | Edge added  | `key[D]` | `key[E]`   |
+|----------------|-------------|----------|------------|
+| `B`            | `A--B`      | `4`      | `infinity` |
+| `C`            | `B--C`      | `4`      | `6`        |
+| `D`            | `B--D`      | `4`      | `6`        |
 
 1. Which vertex becomes `C`'s parent, and what causes the change? 
 
+   `B` becomes `C`'s parent. When `B` gets removed, its edge connecting to `C` has weight 1, which is an improvement over `C`'s current key of 3 (from `A--C`).
 
 2. After removing `E`, what are the tree's four edges and total weight? 
 
+   Edges:
+   - `A--B` with weight 2
+   - `B--C` with weight 1
+   - `B--D` with weight 4
+   - `C--E` with weight 6
 
+   Total weight: 13
 
 ### 1.2 Implementation
 
@@ -197,16 +204,20 @@ path, follow its parents back to the source and reverse that sequence.
 relaxations in execution order. Record the distance and parent of `v`
 after each check, including checks that leave them unchanged.
 
-| Edge checked | Candidate | Distance of `v` | Parent of `v` |
-|---|---|---|---|
-| `B -> C` | TODO | TODO | TODO |
-| `C -> D` | TODO | TODO | TODO |
-| `C -> E` | TODO | TODO | TODO |
-| `D -> E` | TODO | TODO | TODO |
+| Edge checked | Candidate     | Distance of `v` | Parent of `v` |
+|--------------|---------------|-----------------|---------------|
+| `B -> C`     | `2 + 1 = 3`   | `3`             | `A`           |
+| `C -> D`     | `3 + 5 = 8`   | `6`             | `B`           |
+| `C -> E`     | `3 + 6 = 9`   | `9`             | `C`           |
+| `D -> E`     | `6 + 7 = 13`  | `9`             | `C`           |
 
 Give the final distance array and the shortest path from `A` to `E`:
 
- **TODO**
+Final distance array:
+`[0, 2, 3, 6, 9]`
+
+Shortest path:
+`A -> C -> E` (distance `3 + 6 = 9`)
 
 ### 2.2 Implementation
 
@@ -221,14 +232,16 @@ undirected graphs, including graphs with unreachable vertices.
 
 1. Change only the weight of `A--C` to `2.5`. Starting from `A`, what is
    `C`'s parent under each algorithm? What quantity does each algorithm
-   minimize? 
+   minimize?
 
+   Prim picks `B` as `C`'s parent because `B--C`'s edge weight of 1 is superior to `A--C`'s 2.5. Dijkstra picks `A` as `C`'s parent because the shortest path from `A` to `C` is a direct edge with distance 2.5. Prim minimizes the sum of edge weights in a spanning tree, while Dijkstra minimizes the shortest path distance from a specific vertex. 
 
 2. Consider the directed edges `S -> A: 2`, `S -> B: 5`, and `B -> A: -4`.
    Starting from `S`, which distance does Dijkstra finalize too early?
    Give the actual shortest distance and explain why the negative edge
    causes a problem.
 
+   Dijkstra finalizes vertex `A` with distance 2, but using `B -> A` you can achieve distance 1 (`S -> B -> A`). The algorithm removes `A` before `B`, so the negative edge cannot relax the already finalized vertex `A`'s distance. Thus, nonnegative edge weights are necessary for finalizing correct shortest path distances in Dijkstra.
 
 3. Let `V` and `E` be the numbers of vertices and edges. For the provided
    heap, building the queue takes `O(V)`, each removal or decrease takes
@@ -238,6 +251,7 @@ undirected graphs, including graphs with unreachable vertices.
    the time bound if finding the minimum instead scans an unsorted array
    of vertices?
 
+   The additional heap is constructed in `O(V)` time. Each algorithm does a maximum of `V` removals and `O(E)` decreases when checking the contents of the adjacency list (each entry checked at most once). Each removal and decrease costs `O(log V)`. Edge checks and membership tests take `O(E)` time in total. Therefore, each algorithm runs in `O(V + (V + E) log V)` time, which simplifies to `O((V + E) log V)`. `O(V)` auxiliary space is necessary for the heap, parent array, and key/distance array. If finding the minimum instead scanned an unsorted array of vertices, pop_min() would cost `O(V^2)` in total due to `O(V)` per removal. This would cause `O(V^2 + E)` time.
 
 ---
 
